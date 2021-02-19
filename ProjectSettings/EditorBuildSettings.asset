@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/HubWorld.unity
+    guid: 2a6f59dcd08ad80479a7b43c4920444f
   m_configObjects: {}
