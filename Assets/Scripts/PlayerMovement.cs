@@ -8,10 +8,11 @@ public class PlayerMovement : MonoBehaviour
     public float torque;
     public float maxSpeed = 20f;
 
-    public Rigidbody rb;
-    public Vector3 velocity;
+    public Animator animatior;
+    public Rigidbody playerRB;
+    public Vector3 playerVelocity;
     private float potGain;
-    public bool isgrounded;
+    public bool isGrounded;
 
     public Vector3 inputDrive;
     public float inputTurn;
@@ -20,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
       torque = 3f;
-      rb = this.GetComponent<Rigidbody>();
+      playerRB = this.GetComponent<Rigidbody>();
 
     }
     // Update is called once per frame
@@ -28,13 +29,19 @@ public class PlayerMovement : MonoBehaviour
     {
       inputDrive = new Vector3(0f,0f,Input.GetAxis("Vertical"));
       inputTurn = Input.GetAxis("Horizontal");
-      potGain = rb.velocity.magnitude + inputDrive.magnitude;
+      potGain = playerRB.velocity.magnitude + inputDrive.magnitude;
+
+      // Update animation
+      playerVelocity = playerRB.velocity;
+      animatior.SetFloat("speed", playerVelocity.magnitude);
+      animatior.SetBool("isGrounded", isGrounded);
+      
     }
     void FixedUpdate()
     {
-      if (isgrounded==true)
+      if (isGrounded==true)
       {
-        rb.AddRelativeTorque(0,torque*inputTurn,0,ForceMode.Impulse);
+        playerRB.AddRelativeTorque(0,torque*inputTurn,0,ForceMode.Impulse);
         if (potGain < maxSpeed)
         {
           moveChar(inputDrive);
@@ -45,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
 
     void moveChar(Vector3 direction)
     {
-      rb.AddRelativeForce(direction * force);
+      playerRB.AddRelativeForce(direction * force);
     }
 
 
@@ -54,14 +61,14 @@ public class PlayerMovement : MonoBehaviour
     {
       if (collisionInfo.gameObject.name == "Terrain")
       {
-        isgrounded = true;
+        isGrounded = true;
       }
     }
     void OnCollisionExit(Collision collisionInfo)
     {
       if (collisionInfo.gameObject.name == "Terrain")
       {
-        isgrounded = false;
+        isGrounded = false;
       }
     }
 }

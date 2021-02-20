@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 8040713815846408972}
   - component: {fileID: 1295863840}
   - component: {fileID: 8040713815846408974}
-  - component: {fileID: 66935941418214883}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -80,27 +79,12 @@ MonoBehaviour:
   force: 20
   torque: 0
   maxSpeed: 20
-  rb: {fileID: 0}
-  velocity: {x: 0, y: 0, z: 0}
-  isgrounded: 1
-  inputDrive: {x: 0, y: 0, z: 0}
-  inputTurn: 0
---- !u!114 &66935941418214883
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8040713815846409010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d01e7c07128ca341a9a13990e31b638, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   animatior: {fileID: 4299957413218592730}
   playerRB: {fileID: 8040713815846408972}
   playerVelocity: {x: 0, y: 0, z: 0}
-  playerOnGround: 0
+  isGrounded: 1
+  inputDrive: {x: 0, y: 0, z: 0}
+  inputTurn: 0
 --- !u!1001 &4299957413225910970
 PrefabInstance:
   m_ObjectHideFlags: 0
