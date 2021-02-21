@@ -4,71 +4,74 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float force = 20f;
-    public float torque;
-    public float maxSpeed = 20f;
-
-    public Animator animatior;
-    public Rigidbody playerRB;
-    public Vector3 playerVelocity;
-    private float potGain;
-    public bool isGrounded;
-
-    public Vector3 inputDrive;
-    public float inputTurn;
+  public Animator animatior;
+  public Rigidbody playerRB;
+  public Camera playerCam;
 
 
-    void Start()
+  public bool isGrounded;
+  public float moveSpeed;
+
+
+  public float turnSmoothTime = 0.1f;
+  public float turnSmoothVelocity;
+  public Vector3 moveDir;
+
+
+  void Start()
+  {
+    playerRB = this.GetComponent<Rigidbody>();
+  }
+  
+  // Update is called once per frame
+  void Update()
+  {
+    
+    Debug.DrawRay(transform.position+ new Vector3(0,1,0), transform.forward*5, Color.blue);
+    Debug.DrawRay(transform.position+ new Vector3(0,1,0), moveDir*5, Color.green);
+
+    // Jumping
+    if (Input.GetButton("Jump"))
     {
-      torque = 3f;
-      playerRB = this.GetComponent<Rigidbody>();
-
-    }
-    // Update is called once per frame
-    void Update()
-    {
-      inputDrive = new Vector3(0f,0f,Input.GetAxis("Vertical"));
-      inputTurn = Input.GetAxis("Horizontal");
-      potGain = playerRB.velocity.magnitude + inputDrive.magnitude;
-
-      // Update animation
-      playerVelocity = playerRB.velocity;
-      animatior.SetFloat("speed", playerVelocity.magnitude);
-      animatior.SetBool("isGrounded", isGrounded);
-      
-    }
-    void FixedUpdate()
-    {
-      if (isGrounded==true)
-      {
-        playerRB.AddRelativeTorque(0,torque*inputTurn,0,ForceMode.Impulse);
-        if (potGain < maxSpeed)
-        {
-          moveChar(inputDrive);
-        }
-      }
+      return;
     }
 
+    // Update animation
+    animatior.SetFloat("speed", playerRB.velocity.magnitude);
+    animatior.SetBool("isGrounded", isGrounded);
+    
+  }
 
-    void moveChar(Vector3 direction)
+  void FixedUpdate()
+  {
+    float h = Input.GetAxis("Horizontal");
+    float v = Input.GetAxis("Vertical");
+    Vector3 rawDirection = new Vector3(h, 0, v).normalized;
+    
+    if (rawDirection.magnitude >= 0.1f && isGrounded==true)
     {
-      playerRB.AddRelativeForce(direction * force);
+      float targetAngle = Mathf.Atan2(rawDirection.x, rawDirection.z) * Mathf.Rad2Deg + playerCam.transform.eulerAngles.y;
+      float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+      playerRB.rotation = Quaternion.Euler(0f, angle, 0f);
+
+      moveDir = Quaternion.Euler(0f, targetAngle, 0f)* Vector3.forward;
+      playerRB.velocity = (moveDir * moveSpeed * Time.deltaTime);
     }
+  }
 
 
-
-    void OnCollisionEnter(Collision collisionInfo)
+  void OnCollisionEnter(Collision collisionInfo)
+  {
+    if (collisionInfo.gameObject.tag == "Terrain")
     {
-      if (collisionInfo.gameObject.name == "Terrain")
-      {
-        isGrounded = true;
-      }
+      isGrounded = true;
     }
-    void OnCollisionExit(Collision collisionInfo)
+  }
+  void OnCollisionExit(Collision collisionInfo)
+  {
+    if (collisionInfo.gameObject.tag == "Terrain")
     {
-      if (collisionInfo.gameObject.name == "Terrain")
-      {
-        isGrounded = false;
-      }
+      isGrounded = false;
     }
+  }
 }
