@@ -4,74 +4,80 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-  public Animator animatior;
-  public Rigidbody playerRB;
   public Camera playerCam;
+  public Animator animatior;
+  public CharacterController controller;
 
-
-  public bool isGrounded;
+  public float gravity;
   public float moveSpeed;
-
-
+  public float jumpHeight;
   public float turnSmoothTime = 0.1f;
   public float turnSmoothVelocity;
-  public Vector3 moveDir;
+  
+  public bool playerIsGrounded;
+
+  private Vector3 rawDirection;
+  private Vector3 moveDir;
+  private Vector3 playerExtraVelocity;
 
 
   void Start()
   {
-    playerRB = this.GetComponent<Rigidbody>();
+
   }
   
   // Update is called once per frame
   void Update()
   {
-    
-    Debug.DrawRay(transform.position+ new Vector3(0,1,0), transform.forward*5, Color.blue);
-    Debug.DrawRay(transform.position+ new Vector3(0,1,0), moveDir*5, Color.green);
-
-    // Jumping
-    if (Input.GetButton("Jump"))
-    {
-      return;
-    }
-
-    // Update animation
-    animatior.SetFloat("speed", playerRB.velocity.magnitude);
-    animatior.SetBool("isGrounded", isGrounded);
-    
-  }
-
-  void FixedUpdate()
-  {
+    // Horizontal Movement
     float h = Input.GetAxis("Horizontal");
     float v = Input.GetAxis("Vertical");
-    Vector3 rawDirection = new Vector3(h, 0, v).normalized;
-    
-    if (rawDirection.magnitude >= 0.1f && isGrounded==true)
+    rawDirection = new Vector3(h, 0, v).normalized;
+
+    if (rawDirection.magnitude >= 0.1f && playerIsGrounded==true)
     {
       float targetAngle = Mathf.Atan2(rawDirection.x, rawDirection.z) * Mathf.Rad2Deg + playerCam.transform.eulerAngles.y;
       float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-      playerRB.rotation = Quaternion.Euler(0f, angle, 0f);
+      transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-      moveDir = Quaternion.Euler(0f, targetAngle, 0f)* Vector3.forward;
-      playerRB.velocity = (moveDir * moveSpeed * Time.deltaTime);
+      moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+      controller.Move(moveDir * moveSpeed * Time.deltaTime);
     }
+  
+
+    // // Jumping
+    if (Input.GetButtonDown("Jump") && playerIsGrounded)
+      playerExtraVelocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
+
+
+    // Add gravity
+    playerExtraVelocity.y += gravity * Time.deltaTime;
+    controller.Move(playerExtraVelocity * Time.deltaTime);
+
+
+
+    // Update animation
+    animatior.SetFloat("speed", controller.velocity.magnitude);
+    animatior.SetBool("isGrounded", playerIsGrounded);
+    
+    Debug.DrawRay(transform.position+ new Vector3(0,1,0), transform.forward*5, Color.blue);
+    Debug.DrawRay(transform.position+ new Vector3(0,1,0), moveDir*5, Color.green);
   }
 
 
-  void OnCollisionEnter(Collision collisionInfo)
+  void OnCollisionStay(Collision collisionInfo)
   {
     if (collisionInfo.gameObject.tag == "Terrain")
     {
-      isGrounded = true;
+      playerIsGrounded = true;
     }
   }
   void OnCollisionExit(Collision collisionInfo)
   {
     if (collisionInfo.gameObject.tag == "Terrain")
     {
-      isGrounded = false;
+      playerIsGrounded = false;
     }
   }
+
 }
