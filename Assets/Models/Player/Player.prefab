@@ -2164,8 +2164,8 @@ MonoBehaviour:
   moveSpeed: 7
   jumpHeight: 2
   turnSmoothTime: 0.2
-  turnSmoothVelocity: 5
-  rawDirection: {x: 0, y: 0, z: 0}
+  speed: 0
+  playerExtraVelocity: {x: 0, y: 0, z: 0}
 --- !u!143 &6405357049206013780
 CharacterController:
   m_ObjectHideFlags: 0
