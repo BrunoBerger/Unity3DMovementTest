@@ -323,7 +323,7 @@ GameObject:
   - component: {fileID: 975506637}
   - component: {fileID: 975506636}
   - component: {fileID: 975506635}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -555,7 +555,7 @@ GameObject:
   - component: {fileID: 2146702027}
   - component: {fileID: 2146702026}
   - component: {fileID: 2146702025}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HubTerrain
   m_TagString: Terrain
   m_Icon: {fileID: 0}
@@ -698,7 +698,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5737302648456630160, guid: 602d47bb6011f37488af2e7f57d0beea, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 3.02
       objectReference: {fileID: 0}
     - target: {fileID: 5737302648456630160, guid: 602d47bb6011f37488af2e7f57d0beea, type: 3}
       propertyPath: m_LocalPosition.z
@@ -733,21 +733,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5737302648456630163, guid: 602d47bb6011f37488af2e7f57d0beea, type: 3}
-      propertyPath: gravity
-      value: -20
-      objectReference: {fileID: 0}
-    - target: {fileID: 5737302648456630163, guid: 602d47bb6011f37488af2e7f57d0beea, type: 3}
-      propertyPath: moveSpeed
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 5737302648456630163, guid: 602d47bb6011f37488af2e7f57d0beea, type: 3}
       propertyPath: playerCam
       value: 
       objectReference: {fileID: 1279276047}
-    - target: {fileID: 5737302648456630163, guid: 602d47bb6011f37488af2e7f57d0beea, type: 3}
-      propertyPath: jumpHeight
-      value: 20
-      objectReference: {fileID: 0}
     - target: {fileID: 5737302648456630191, guid: 602d47bb6011f37488af2e7f57d0beea, type: 3}
       propertyPath: m_Name
       value: Player
