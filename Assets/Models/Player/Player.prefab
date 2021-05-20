@@ -2162,9 +2162,12 @@ MonoBehaviour:
     m_Bits: 256
   gravity: -35
   moveSpeed: 7
+  moveAccel: 0
+  acceleration: 0
   jumpHeight: 2
   turnSmoothTime: 0.2
   speed: 0
+  rawDirection: {x: 0, y: 0, z: 0}
   playerExtraVelocity: {x: 0, y: 0, z: 0}
 --- !u!143 &6405357049206013780
 CharacterController:

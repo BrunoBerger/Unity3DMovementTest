@@ -13,13 +13,15 @@ public class PlayerMovement : MonoBehaviour
   // describe player locomotion
   public float gravity;
   public float moveSpeed;
+  public float moveAccel;
+  public float acceleration;
   public float jumpHeight;
   public float turnSmoothTime = 0.1f;
   private float turnSmoothVelocity;
   public float speed;
   private bool playerIsGrounded;
   private Vector3 lastPos;
-  private Vector3 rawDirection;
+  public Vector3 rawDirection;
   private Vector3 moveDir;
   public Vector3 playerExtraVelocity;
   
@@ -44,7 +46,6 @@ public class PlayerMovement : MonoBehaviour
     bool playerIsGrounded = Physics.CheckSphere(pos, radius, GroundLayer);
 
     // constant forces on the character
-    lastPos = transform.position;
     playerExtraVelocity.y += gravity * Time.deltaTime;
     if (playerIsGrounded)
     {
@@ -59,7 +60,7 @@ public class PlayerMovement : MonoBehaviour
     // Horizontal Movement
     float h = Input.GetAxis("Horizontal");
     float v = Input.GetAxis("Vertical");
-    rawDirection = new Vector3(h, 0, v).normalized;
+    rawDirection = new Vector3(h, 0, v);
     if (rawDirection.magnitude >= 0.1f)
     {
       float targetAngle = Mathf.Atan2(rawDirection.x, rawDirection.z) * Mathf.Rad2Deg + playerCam.transform.eulerAngles.y;
@@ -76,8 +77,8 @@ public class PlayerMovement : MonoBehaviour
     {
       playerExtraVelocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
     }
-
-    speed = getPlayerVelcity().magnitude;
+    
+    speed = getPlayerSpeed().magnitude;
 
     // Actually move the player and update their animation
     controller.Move(playerExtraVelocity * Time.deltaTime);
@@ -98,15 +99,18 @@ public class PlayerMovement : MonoBehaviour
     Gizmos.DrawWireSphere(pos, radius);
   }
 
-  // getters for info on player
+
   public bool getPlayerGrounded()
   {
     return playerIsGrounded;
   }
-  public Vector3 getPlayerVelcity()
+  // ignores vertical Speed
+  public Vector3 getPlayerSpeed()
   {
-    Vector3 pastDir = transform.position - lastPos;
-    Debug.DrawRay(transform.position+ new Vector3(0,1,0), pastDir*20, Color.red);
+    Vector3 pastDir = lastPos - transform.position ;
+    pastDir.y = 0;
+    Debug.DrawRay(transform.position+new Vector3(0,1,0), pastDir*20, Color.red);
+    lastPos = transform.position;
     return pastDir;
   }
 
